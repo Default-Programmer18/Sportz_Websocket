@@ -29,8 +29,10 @@ matchRouter.post('/',async(req,res)=>{
 
         }).returning()
 
+        if (req.app.locals.broadcastMatchCreated) {
+            req.app.locals.broadcastMatchCreated(event);
+        }
         res.status(201).json({data:event})
-        
     }
     catch(e){
         res.status(500).json({error:"Match could not be created"})
@@ -41,7 +43,7 @@ matchRouter.get('/',async(req,res)=>{
     if (!parsed.success) {
         return res.status(400).json({error: 'Invalid query', details:JSON.stringify(parsed.error)})
     }
-    console.log(parsed.data)
+
     const limit=parsed.data.limit ?? 50;
     try{
         const data=await db
