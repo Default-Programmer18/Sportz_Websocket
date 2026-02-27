@@ -20,7 +20,7 @@ app.use('/matches',matchRouter)
 
 const broadcastMatchCreated= attachWebsocketConnection(server)
 app.locals.broadcastMatchCreated=broadcastMatchCreated;
-console.log(app.locals.broadcastMatchCreated)
+
 
 server.listen(PORT,()=>{
     const baseUrl= HOST==='0.0.0.0'? `http://localhost:${PORT}`: `http://${HOST}:${PORT}`;
