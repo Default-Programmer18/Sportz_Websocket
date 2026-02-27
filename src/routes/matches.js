@@ -3,7 +3,6 @@ import {Router} from 'express'
 import {createMatchSchema, listMatchesQuerySchema} from '../validation/matches.js'
 import { matches } from '../db/schema.js';
 import { getMatchStatus } from '../utils/match-status.js';
-import { success } from 'zod';
 import { desc } from "drizzle-orm";
 
 export const matchRouter=Router();
@@ -11,11 +10,12 @@ export const matchRouter=Router();
 matchRouter.post('/',async(req,res)=>{
   
     const parsed = createMatchSchema.safeParse(req.body);
-    const {data:{startTime,endTime, homeScore,awayScore}}=parsed
-console.log('here 1',parsed.data)
     if (!parsed.success) {
         return res.status(400).json({error: 'Invalid payload', details:JSON.stringify(parsed.error)})
     }
+
+    const {data:{startTime,endTime, homeScore,awayScore}}=parsed
+
     try{
         //const event = result[0];
         console.log('here in try')
@@ -33,7 +33,7 @@ console.log('here 1',parsed.data)
         
     }
     catch(e){
-        res.status(500).json({error:"Match could not be created", details: e})
+        res.status(500).json({error:"Match could not be created"})
     }
 })
 matchRouter.get('/',async(req,res)=>{
@@ -42,7 +42,7 @@ matchRouter.get('/',async(req,res)=>{
         return res.status(400).json({error: 'Invalid query', details:JSON.stringify(parsed.error)})
     }
     console.log(parsed.data)
-    const limit=Math.min(parsed.data.limit ?? 50)
+    const limit=parsed.data.limit ?? 50;
     try{
         const data=await db
                             .select()
@@ -54,8 +54,7 @@ matchRouter.get('/',async(req,res)=>{
 
     }
     catch(e){
-        console.log(e)
-        res.status(500).json({error:"MatchList could not be fetched", details: e})
+        res.status(500).json({error:"MatchList could not be fetched"})
     }
  
 })
