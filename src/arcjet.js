@@ -1,14 +1,8 @@
 import arcjet, { detectBot, shield, slidingWindow } from "@arcjet/node";
 const arcjetKey= process.env.ARCJET_KEY
 const arcjetMode= process.env.ARCJET_MODE === 'DRY_RUN'? 'DRY_RUN' :'LIVE'
+ 
 
-// const logger = {
-//   debug: console.log,
-//   info: console.log,
-//   warn: console.warn,
-//   error: console.error,
-// }
-//const client = createRemoteClient({})
 
 if(!arcjetKey)
     throw new Error( "Arcjet Key not available.")
@@ -17,7 +11,7 @@ export const httpArcjet=arcjetKey?
                             arcjet({
                                 key:arcjetKey,
                                 rules: [
-                                    // Shield protects your app from common attacks e.g. SQL injection
+                                    //Shield protects your app from common attacks e.g. SQL injection
                                     shield({ mode: arcjetMode }),
                                     detectBot({
                                         mode: arcjetMode ,
@@ -28,8 +22,8 @@ export const httpArcjet=arcjetKey?
                                     }),
                                     slidingWindow({ 
                                         mode: arcjetMode ,
-                                        interval: '10s', // 60 second sliding window
-                                        max: 40
+                                        interval: '10s', // 10 second sliding window
+                                        max: 50
                                     })
                                 ],
                                 
@@ -38,7 +32,7 @@ export const wsArcjet=arcjetKey?
                             arcjet({
                                 key:arcjetKey,
                                 rules: [
-                                    // Shield protects your app from common attacks e.g. SQL injection
+                                    //Shield protects your app from common attacks e.g. SQL injection
                                     shield({ mode: arcjetMode }),
                                     
                                     detectBot({
@@ -50,7 +44,7 @@ export const wsArcjet=arcjetKey?
                                     }),
                                     slidingWindow({ 
                                         mode: arcjetMode ,
-                                        interval: '2s', // 60 second sliding window
+                                        interval: '2s', // 2 second sliding window
                                         max: 5
                                     })
                                 ],

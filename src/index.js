@@ -13,10 +13,13 @@ const server= http.createServer(app)
 
 app.use(express.json())
 
+
 app.get('/',(req,res)=>{
     res.send('Hello from Express Server')
 })
+
 app.use(securityMiddleware())
+
 
 app.use('/matches',matchRouter)
 
