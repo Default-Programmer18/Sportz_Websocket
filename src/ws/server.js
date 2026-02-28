@@ -1,4 +1,5 @@
 import {WebSocket, WebSocketServer} from 'ws'
+import { wsArcjet } from '../arcjet.js';
 
 const sendJson=(socket,payload)=>{
     if(socket.readyState !=WebSocket.OPEN)
@@ -20,7 +21,25 @@ export function attachWebsocketConnection(server){
         maxPayload:1024*1024,
     });
     
-    wss.on('connection',(socket)=>{
+    wss.on('connection',async(socket,req)=>{
+        if(wsArcjet){
+            try{
+                const decision = await wsArcjet.protect(req);
+                if(decision.isDenied){
+                    const code= decision.reason.isRateLimit()? 1013:1008;
+                    const reason=decision.reason.isRateLimit()? 'Rate Limit Exceeded':'Access Denied'
+                    socket.close(code,reason);
+                    return;
+                }
+
+            }
+            catch(e){
+                console.log("Security error at ws arcjet connection",e)
+                socket.close()
+                return;
+            }
+        }
+        
         console.log('socket connected')
         socket.isAlive=true
         socket.on('pong',()=>{socket.isAlive=true;})
@@ -35,7 +54,7 @@ export function attachWebsocketConnection(server){
                 client.isAlive=false
                 client.ping()
             })
-        },3000)
+        },1000)
 
          socket.on('close', () => {
             clearInterval(pingPongInterval)
