@@ -18,30 +18,28 @@ export function attachWebsocketConnection(server){
 ///////////////////////////////////////////////////////////////////////////////////////
     //working
     //the arcjet security was added before at the time of handshake
-    // server.on('upgrade',async(req,socket,head)=>{
-    //     if(wsArcjet){
-    //         try{
-    //             const decision = await wsArcjet.protect(req);
-    //             if(decision.isDenied){
-    //                 if(decision.reason.isRateLimit())
-    //                     socket.write('WS->STATUS-429 -TOO MANY REQUEST')   ; 
-    //                 else
-    //                     socket.write('WS->STATUS-403 -Forbidden')   ; 
+    server.on('upgrade',async(req,socket,head)=>{
+        if(wsArcjet){
+            try{
+                const decision = await wsArcjet.protect(req);
+                if(decision.isDenied()){
+                    if(decision.reason.isRateLimit())
+                        socket.write('WS->STATUS-429 -TOO MANY REQUEST')   ; 
+                    else
+                        socket.write('WS->STATUS-403 -Forbidden')   ; 
                                                   
-    //                 socket.destroy();
-    //                 return;
-    //             }
-    //         }
-    //         catch(e){
-    //             console.log("Security error at ws arcjet connection",e)
-    //             socket.write('WS->STATUS-500 -Internal Server Error')   ; 
-    //             socket.destroy();
-    //             return;
-    //         }
-    //     }
-
-
-    // })
+                    socket.destroy();
+                    return;
+                }
+            }
+            catch(e){
+                console.log("Security error at ws arcjet connection",e)
+                socket.write('WS->STATUS-500 -Internal Server Error')   ; 
+                socket.destroy();
+                return;
+            }
+        }
+    })
 ///////////////////////////////////////////////////////
     const wss =new WebSocketServer({
         server,
@@ -63,23 +61,25 @@ export function attachWebsocketConnection(server){
     });  
     
     wss.on('connection',async(socket,req)=>{
-        ////////////////////////////////////////////////////////////////////////////////
-        //working
+        //////////////////////////////////////////////////////////////////////////////////
+       // working
         //the arcjet security was added after handshake
         // console.log(wsArcjet)
         // if(wsArcjet){
         //     try{
         //         const decision = await wsArcjet.protect(req);
         //         console.log(decision)
-        //         if(decision.isDenied){
+        //         if(decision.isDenied()){
 
         //             console.log('here')
+        //             console.log(decision.reason)
         //             const code= decision.reason.isRateLimit()? 1013:1008;
         //             const reason=decision.reason.isRateLimit()? 'Rate Limit Exceeded':'Access Denied'
+                    
         //             socket.close(code,reason);
+        //             socket.close()
         //             return;
         //         }
-
         //     }
         //     catch(e){
         //         console.log("Security error at ws arcjet connection",e)
