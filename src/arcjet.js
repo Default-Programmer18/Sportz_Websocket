@@ -13,17 +13,17 @@ export const httpArcjet=arcjetKey?
                                 rules: [
                                     //Shield protects your app from common attacks e.g. SQL injection
                                     shield({ mode: arcjetMode }),
-                                    detectBot({
-                                        mode: arcjetMode ,
-                                        allow:[
-                                            "CATEGORY:SEARCH_ENGINE",
-                                            "CATEGORY:PREVIEW",
-                                        ]
-                                    }),
+                                    // detectBot({
+                                    //     mode: arcjetMode ,
+                                    //     allow:[
+                                    //         "CATEGORY:SEARCH_ENGINE",
+                                    //         "CATEGORY:PREVIEW",
+                                    //     ]
+                                    // }),
                                     slidingWindow({ 
                                         mode: arcjetMode ,
                                         interval: '10s', // 10 second sliding window
-                                        max: 50
+                                        max: 500
                                     })
                                 ],
                                 
@@ -35,13 +35,13 @@ export const wsArcjet=arcjetKey?
                                     //Shield protects your app from common attacks e.g. SQL injection
                                     shield({ mode: arcjetMode }),
                                     
-                                    detectBot({
-                                        mode: arcjetMode ,
-                                        allow:[
-                                            "CATEGORY:SEARCH_ENGINE",
-                                            "CATEGORY:PREVIEW",
-                                        ]
-                                    }),
+                                    // detectBot({
+                                    //     mode: arcjetMode ,
+                                    //     allow:[
+                                    //         "CATEGORY:SEARCH_ENGINE",
+                                    //         "CATEGORY:PREVIEW",
+                                    //     ]
+                                    // }),
                                     slidingWindow({ 
                                         mode: arcjetMode ,
                                         interval: '2s', // 2 second sliding window
@@ -59,7 +59,7 @@ export function securityMiddleware(){
             const decision = await httpArcjet.protect(req);
             console.log("Arcjet decision", decision);
             
-            if(decision.isDenied){
+            if(decision.isDenied()){
 
                 if (decision.reason.isRateLimit()) {
                     return res.status(429).json({ error: "Too Many Requests" });
