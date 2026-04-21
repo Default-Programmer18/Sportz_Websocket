@@ -277,5 +277,7 @@ scheduled | live | finished
 - [ ] **Bot detection commented out** — `detectBot` is present in `arcjet.js` but disabled on both HTTP and WS layers
 - [ ] **No authentication** — any client can connect to the WS endpoint or call the REST API (beyond Arcjet rate limiting)
 - [ ] **`wcat` dependency** — listed in `package.json` but not used anywhere in the source code
-Work in progress
+
 ---
+
+## Work in Progress
