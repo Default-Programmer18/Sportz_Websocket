@@ -267,7 +267,7 @@ scheduled | live | finished
 - ✅ Zod validation for all inputs
 - ✅ Drizzle ORM schema with migration
 
-## 🔧 Known Gaps / Potential Improvements
+## 🔧 Work in Progress
 
 - [ ] **Commentary routes** — the `commentary` table is defined in the schema and migration, but no REST or WS endpoints exist for it yet
 - [ ] **`updateScoreSchema` and `matchIdParamSchema`** — defined in `validation/matches.js` but not used anywhere (no PATCH/PUT route implemented)
@@ -280,4 +280,3 @@ scheduled | live | finished
 
 ---
 
-## Work in Progress
